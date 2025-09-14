@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ScenPartDef>
+    <defName>PursuingMechanoidsCustomizable</defName>
+    <label>pursuing mechanoids (custom)</label>
+    <category>Misc</category>
+    <scenPartClass>PursuingMechanoidsCustomizable.ScenPart_PMechs_Custom</scenPartClass>
+    <maxUses>1</maxUses>
+    <preventRemovalOfFaction>Mechanoid</preventRemovalOfFaction>
+  </ScenPartDef>
+</Defs>
