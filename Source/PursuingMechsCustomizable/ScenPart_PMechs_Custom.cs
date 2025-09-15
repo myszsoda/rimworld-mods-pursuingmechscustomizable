@@ -146,9 +146,11 @@ public class ScenPart_PMechs_Custom : ScenPart
 								       LetterDefOf.ThreatSmall, (LookTargets)thing);
 				}
 				if (Find.TickManager.TicksGame == this.TimerIntervalTick(this.mapRaidTimers[tmpMap]))
-					this.FireRaid_NewTemp(tmpMap, 1.5f, 2000f);
+					// We override original value of 2000 and apply custom min
+					this.FireRaid_NewTemp(tmpMap, 1.5f, (float)Settings_PMechs_Custom.RaidStrengthMin);
 				if (Find.TickManager.TicksGame == this.TimerIntervalTick(this.mapRaidTimers[tmpMap] + 30000))
-					this.FireRaid_NewTemp(tmpMap, 2f, 8000f);
+					// We override original value of 8000 and apply custom min
+					this.FireRaid_NewTemp(tmpMap, 2f, (float)Settings_PMechs_Custom.RaidStrengthMin);
 			}
 		}
 	}
@@ -182,7 +184,7 @@ public class ScenPart_PMechs_Custom : ScenPart
 
 	public void Notify_QuestCompleted() => this.questCompleted = true;
 
-	private void FireRaid(Map map) => this.FireRaid_NewTemp(map, 1.5f, 5000f);
+	private void FireRaid(Map map) => this.FireRaid_NewTemp(map, 1.5f, (float)Settings_PMechs_Custom.RaidStrengthMin);
 
 	private void FireRaid_NewTemp(Map map, float pointsMultiplier, float minPoints)
 	{
