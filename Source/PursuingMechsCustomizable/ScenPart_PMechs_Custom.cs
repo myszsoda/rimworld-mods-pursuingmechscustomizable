@@ -121,14 +121,36 @@ public class ScenPart_PMechs_Custom : ScenPart
 		this.onStartMap = false;
 	}
 
+	private void CheckMechhiveQuestCompletion()
+	{
+		List<Quest> quests = Find.QuestManager.QuestsListForReading;
+		for (int i = 0; i < quests.Count; i++)
+		{
+			Quest quest = quests[i];
+			if (quest.State == QuestState.EndedSuccess &&
+			    quest.root != null &&
+			    quest.root.defName.IndexOf("Gravcore_Mechhive") >= 0)
+			{
+				this.Notify_QuestCompleted();
+				return;
+			}
+		}
+	}
+
+
 	private int TimerIntervalTick(int timer) => (timer + 2500 - 1) / 2500 * 2500;
 
 	public override void Tick()
 	{
 		if (Find.TickManager.TicksGame % 2500 != 0)
 			return;
+
 		this.tmpMaps.Clear();
 		this.tmpMaps.AddRange((IEnumerable<Map>)this.mapWarningTimers.Keys);
+
+		if (!this.questCompleted)
+			this.CheckMechhiveQuestCompletion();
+
 		foreach (Map tmpMap in this.tmpMaps)
 		{
 			if ((this.Disabled ? 1 : (GravshipUtility.GetPlayerGravEngine_NewTemp(tmpMap) == null ? 1 : 0)) != 0)
@@ -151,6 +173,7 @@ public class ScenPart_PMechs_Custom : ScenPart
 				if (Find.TickManager.TicksGame == this.TimerIntervalTick(this.mapRaidTimers[tmpMap] + 30000))
 					// We override original value of 8000 and apply custom min
 					this.FireRaid_NewTemp(tmpMap, 2f, (float)Settings_PMechs_Custom.RaidStrengthMin);
+				// TODO maybe endless loop here?
 			}
 		}
 	}
