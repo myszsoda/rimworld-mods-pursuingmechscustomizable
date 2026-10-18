@@ -25,6 +25,7 @@ public class ScenPart_PMechs_Custom : ScenPart
 	private List<Map> tmpRaidKeys;
 	private List<int> tmpRaidValues;
 	private List<Map> tmpMaps = new List<Map>();
+	private int MapRaidCounter = 0;
 
 	private Alert_MechThreat AlertCached
 	{
@@ -97,6 +98,7 @@ public class ScenPart_PMechs_Custom : ScenPart
 		this.onStartMap = true;
 		this.mapWarningTimers.Clear();
 		this.mapRaidTimers.Clear();
+		this.MapRaidCounter = 0;
 	}
 
 	public override void PostMapGenerate(Map map)
@@ -105,12 +107,14 @@ public class ScenPart_PMechs_Custom : ScenPart
 			return;
 		this.StartTimers(map);
 		this.onStartMap = false;
+		this.MapRaidCounter = 0;
 	}
 
 	public override void PostGravshipLanded(Map map)
 	{
 		this.onStartMap = false;
 		this.StartTimers(map);
+		this.MapRaidCounter = 0;
 	}
 
 	public override void MapRemoved(Map map)
@@ -119,6 +123,7 @@ public class ScenPart_PMechs_Custom : ScenPart
 			return;
 		this.mapRaidTimers.Remove(map);
 		this.onStartMap = false;
+		this.MapRaidCounter = 0;
 	}
 
 	private void CheckMechhiveQuestCompletion()
@@ -136,7 +141,6 @@ public class ScenPart_PMechs_Custom : ScenPart
 			}
 		}
 	}
-
 
 	private int TimerIntervalTick(int timer) => (timer + 2500 - 1) / 2500 * 2500;
 
@@ -170,10 +174,19 @@ public class ScenPart_PMechs_Custom : ScenPart
 				if (Find.TickManager.TicksGame == this.TimerIntervalTick(this.mapRaidTimers[tmpMap]))
 					// We override original value of 2000 and apply custom min
 					this.FireRaid_NewTemp(tmpMap, 1.5f, (float)Settings_PMechs_Custom.RaidStrengthMin);
-				if (Find.TickManager.TicksGame == this.TimerIntervalTick(this.mapRaidTimers[tmpMap] + 30000))
+				if (Find.TickManager.TicksGame == this.TimerIntervalTick(this.mapRaidTimers[tmpMap] + 30000)) {
 					// We override original value of 8000 and apply custom min
 					this.FireRaid_NewTemp(tmpMap, 2f, (float)Settings_PMechs_Custom.RaidStrengthMin);
-				// TODO maybe endless loop here?
+					// Value for later calculations
+					this.MapRaidCounter = 2;
+				}
+				if (Settings_PMechs_Custom.RaidDoInfinite)
+				{
+					if (Find.TickManager.TicksGame == this.TimerIntervalTick(this.mapRaidTimers[tmpMap] + this.MapRaidCounter * 30000)) {
+						this.FireRaid_NewTemp(tmpMap, 2f, (float)Settings_PMechs_Custom.RaidStrengthMin);
+						this.MapRaidCounter++;
+					}
+				}
 			}
 		}
 	}

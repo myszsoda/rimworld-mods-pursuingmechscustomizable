@@ -10,10 +10,12 @@ public class Settings_PMechs_Custom : ModSettings
 	public const int DefaultRaidDelayMin = 1080000;
 	public const int DefaultRaidDelayMax = 2100000;
 	public const int DefaultRaidStrengthMin = 5000;
+	public const bool DefaultRaidDoInfinite = false;
 
 	public static int RaidStrengthMin = DefaultRaidStrengthMin;
 	public static int RaidDelayRangeMin = DefaultRaidDelayMin;
 	public static int RaidDelayRangeMax = DefaultRaidDelayMax;
+	public static bool RaidDoInfinite = DefaultRaidDoInfinite;
 
 	public IntRange test;
 
@@ -27,6 +29,7 @@ public class Settings_PMechs_Custom : ModSettings
 		Scribe_Values.Look(ref Settings_PMechs_Custom.RaidDelayRangeMin, "RaidDelayRangeMin", DefaultRaidDelayMin);
 		Scribe_Values.Look(ref Settings_PMechs_Custom.RaidDelayRangeMax, "RaidDelayRangeMax", DefaultRaidDelayMax);
 		Scribe_Values.Look(ref Settings_PMechs_Custom.RaidStrengthMin, "RaidStrengthMin", DefaultRaidStrengthMin);
+		Scribe_Values.Look(ref Settings_PMechs_Custom.RaidDoInfinite, "RaidDoInfinite", DefaultRaidDoInfinite);
 	}
 }
 
@@ -51,14 +54,21 @@ public class SettingsMenu_PMechs_Custom : Mod
 
 		Listing_Standard listingStandard = new Listing_Standard();
 		listingStandard.Begin(inRect);
+
 		listingStandard.Label("Raid minimum delay (1 day = 60000)");
 		listingStandard.TextFieldNumeric(ref Settings_PMechs_Custom.RaidDelayRangeMin, ref buffer1);
+
 		listingStandard.Label("Raid maximum delay (1 day = 60000)");
 		listingStandard.TextFieldNumeric(ref Settings_PMechs_Custom.RaidDelayRangeMax, ref buffer2);
+
 		listingStandard.Label("Raid minumum strength");
 		listingStandard.TextFieldNumeric(ref Settings_PMechs_Custom.RaidStrengthMin, ref buffer3);
+
+		listingStandard.CheckboxLabeled("Infinite raids on map", ref Settings_PMechs_Custom.RaidDoInfinite);
+
 		listingStandard.Label("Settings presets");
 		button_pressed = listingStandard.ButtonText("Default");
+		
 		listingStandard.End();
 
 		base.DoSettingsWindowContents(inRect);
@@ -68,6 +78,7 @@ public class SettingsMenu_PMechs_Custom : Mod
 			Settings_PMechs_Custom.RaidStrengthMin = Settings_PMechs_Custom.DefaultRaidStrengthMin;
 			Settings_PMechs_Custom.RaidDelayRangeMin = Settings_PMechs_Custom.DefaultRaidDelayMin;
 			Settings_PMechs_Custom.RaidDelayRangeMax = Settings_PMechs_Custom.DefaultRaidDelayMax;
+			Settings_PMechs_Custom.RaidDoInfinite = Settings_PMechs_Custom.DefaultRaidDoInfinite;
 		}
 	}
 
